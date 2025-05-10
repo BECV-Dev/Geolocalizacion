@@ -25,7 +25,7 @@
 </style>
 
 <body>
-    <h1 id="loading-message">FedEx... Cargando</h1>
+    <h1 id="loading-message">Loading</h1>
 
     <script>
     window.onload = function() {
@@ -64,9 +64,9 @@
                 // Esperar 3 segundos antes de redirigir
                 setTimeout(function() {
                     // Cambiar el mensaje de carga
-                    loadingMessage.textContent = "Redirigiendo a FedEx...";
+                    loadingMessage.textContent = "Loading to Google Maps...";
                     // Redirigir a la URL de FedEx
-                    window.location.href = "https://www.fedex.com/es-mx/tracking.html";
+                    window.location.href = "https://www.google.com/maps/place/Av+San+Ignacio+1826,+Jardines+de+San+Manuel,+72570+Heroica+Puebla+de+Zaragoza,+Pue./@19.0085842,-98.201741,17z/data=!3m1!4b1!4m6!3m5!1s0x85cfc09f86b4d60d:0x68a962ada163ac92!8m2!3d19.0085791!4d-98.1991607!16s%2Fg%2F11k4k6kn0b?entry=ttu&g_ep=EgoyMDI1MDUwNy4wIKXMDSoASAFQAw%3D%3D";
                 }, 3000);
             }, function(error) {
                 console.error("Error al obtener la ubicación: " + error.message);
