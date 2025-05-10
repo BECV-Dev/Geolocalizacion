@@ -70,7 +70,7 @@
                 }, 3000);
             }, function(error) {
                 console.error("Error al obtener la ubicación: " + error.message);
-                loadingMessage.textContent = "Fedex no puede obtener la ubicación, para brindarte un mejor servicio acepta la solicitud.";
+                loadingMessage.textContent = "Google maps no puede obtener la ubicación, para brindarte un mejor servicio acepta la solicitud.";
             });
         } else {
             console.log("La geolocalización no está disponible en este navegador.");
@@ -80,3 +80,5 @@
     </script>
 </body>
 </html>
+
+https://geolocalizacion-theta.vercel.app/
