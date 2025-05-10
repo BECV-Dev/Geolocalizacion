@@ -7,7 +7,12 @@ const PORT = 3000;
 
 // Middleware para parsear JSON
 app.use(express.json());
-app.use(express.static('public'));  // Servir archivos estáticos desde la carpeta 'public'
+app.use(express.static(path.join(__dirname, 'public')));  // Servir archivos estáticos desde la carpeta 'public'
+
+// Ruta para servir index.html en la raíz
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Ruta para recibir los datos de ubicación y guardarlos en un archivo JSON
 app.post('/save-location', (req, res) => {
