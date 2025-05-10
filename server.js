@@ -1,9 +1,12 @@
+require('dotenv').config();  // Cargar las variables de entorno
+const { createClient } = require('@supabase/supabase-js');
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
-
+const path = require('path');  // Importar el módulo 'path'
 const app = express();
 const PORT = 3000;
+
+// Configura el cliente de Supabase usando las variables de entorno
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
 // Middleware para parsear JSON
 app.use(express.json());
@@ -14,32 +17,20 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Ruta para recibir los datos de ubicación y guardarlos en un archivo JSON
-app.post('/save-location', (req, res) => {
-    const locationData = req.body;
+// Ruta para recibir los datos de ubicación y guardarlos en Supabase
+app.post('/save-location', async (req, res) => {
+    const { latitude, longitude, timestamp } = req.body;
 
-    // Ruta del archivo JSON donde se guardarán las ubicaciones
-    const filePath = path.join(__dirname, 'public', 'locations.json');
+    // Insertar los datos de ubicación en la tabla 'locations' de Supabase
+    const { data, error } = await supabase
+        .from('locations')
+        .insert([{ latitude, longitude, timestamp }]);
 
-    // Leer los datos previos (si existen) y agregar la nueva ubicación
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        let jsonData = [];
-        
-        if (!err && data) {
-            jsonData = JSON.parse(data); // Si hay datos previos, los parseamos
-        }
+    if (error) {
+        return res.status(500).send({ message: "Error al guardar los datos." });
+    }
 
-        // Agregar la nueva ubicación a los datos
-        jsonData.push(locationData);
-
-        // Escribir los datos en el archivo JSON
-        fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
-            if (err) {
-                return res.status(500).send({ message: "Error al guardar los datos." });
-            }
-            res.send({ message: "Ubicación guardada correctamente." });
-        });
-    });
+    res.send({ message: "Ubicación guardada correctamente." });
 });
 
 // Iniciar el servidor
